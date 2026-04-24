@@ -1,0 +1,672 @@
+import { useState } from "react";
+
+const VOCAB = {
+  1:{title:"一起看电视",words:[
+    {id:101,char:"了解",pinyin:"liǎo jiě",en:"to understand / know about",psle:true,collocations:["了解情况","了解事情","无法了解","了解国内外"],example:"妈妈经常和老师联系，了解我在学校的学习情况。"},
+    {id:102,char:"内外",pinyin:"nèi wài",en:"inside and outside",psle:false,collocations:["国内外","内外勾结","国家内外"],example:"这个地区出产的椰子味道鲜甜，远销国内外。"},
+    {id:103,char:"预报",pinyin:"yù bào",en:"forecast",psle:false,collocations:["天气预报","地震预报","气象预报"],example:"天气预报说明天有雨，所以我们取消了出游的计划。"},
+    {id:104,char:"情况",pinyin:"qíng kuàng",en:"situation / condition",psle:false,collocations:["天气情况","了解情况","考试情况","工作情况"],example:"一回到家里，妈妈就问我今天考试的情况。"},
+    {id:105,char:"观众",pinyin:"guān zhòng",en:"audience / spectator",psle:false,collocations:["电影观众","电视观众","普通观众"],example:"舞蹈家柔美的舞姿，博得观众的阵阵掌声。"},
+    {id:106,char:"播放",pinyin:"bō fàng",en:"broadcast / play",psle:false,collocations:["播放音乐","播放唱片","播放视频","播放比赛"],example:"电视里正在播放足球比赛，爸爸目不转睛地看着。"},
+    {id:107,char:"连续剧",pinyin:"lián xù jù",en:"TV series / soap opera",psle:false,collocations:["电视连续剧","播放连续剧","连续剧集数"],example:"这部连续剧共有五十集，要播放好几个月才能播完。"},
+    {id:108,char:"集",pinyin:"jí",en:"episode (measure word)",psle:false,collocations:["两集","续集","共有三十集"],example:"这部连续剧共有一百多集，妈妈花了两个月从头看到完。"},
+    {id:109,char:"精彩",pinyin:"jīng cǎi",en:"exciting / brilliant",psle:false,collocations:["精彩节目","表演精彩","演讲精彩","球赛精彩"],example:"今天的比赛竞争激烈，十分精彩。"},
+    {id:110,char:"换成",pinyin:"huàn chéng",en:"change into / switch to",psle:false,collocations:["换成另一种","换成蓝色","换成新的"],example:"你把他的黄色球衣换成蓝色的，他肯定不要！"},
+    {id:111,char:"方言",pinyin:"fāng yán",en:"dialect",psle:false,collocations:["方言戏剧","地方方言","古老方言"],example:"虽然是在同一个国家，但各地区的方言却千差万别。"},
+    {id:112,char:"投篮",pinyin:"tóu lán",en:"shoot at the basket",psle:false,collocations:["投篮得分","瞄准投篮","投篮不中"],example:"李大明的篮球打得真棒，投篮每投必中。"},
+    {id:113,char:"手掌",pinyin:"shǒu zhǎng",en:"palm of hand",psle:false,collocations:["拍着手掌","手掌拍红","掌声雷动"],example:"演唱会的场面十分火爆，许多人把手掌都拍红了。"},
+    {id:114,char:"疲倦",pinyin:"pí juàn",en:"exhausted / tired",psle:false,collocations:["感到疲倦","十分疲倦","身体疲倦"],example:"他确实太疲倦了，一躺在沙发上便睡着了。"},
+    {id:115,char:"建议",pinyin:"jiàn yì",en:"suggest / suggestion",psle:false,collocations:["提出建议","合理建议","接受建议"],example:"大强建议去图书馆看书，大家都表示赞成。"},
+    {id:116,char:"舞蹈",pinyin:"wǔ dǎo",en:"dance",psle:false,collocations:["舞蹈表演","欣赏舞蹈","古典舞蹈","民族舞蹈"],example:"这种舞蹈节奏太快，不适合老人参加。"},
+    {id:117,char:"秘密",pinyin:"mì mì",en:"secret",psle:false,collocations:["保守秘密","秘密行动","泄露秘密"],example:"小华把我拉过一旁，说有个秘密要告诉我。"},
+    {id:118,char:"新闻",pinyin:"xīn wén",en:"news",psle:false,collocations:["新闻节目","新闻记者","国际新闻","国内新闻"],example:"爸爸一边吃早餐，一边读着报纸上的新闻。"},
+    {id:119,char:"刚",pinyin:"gāng",en:"just / only a moment ago",psle:false,collocations:["刚刚","刚才","刚好"],example:"天刚亮，妈妈就起身了。"},
+    {id:120,char:"拍着",pinyin:"pāi zhe",en:"clap / pat",psle:false,collocations:["拍着手掌","拍着翅膀","拍着胸膛"],example:"部长发言结束，在场的所有观众都拍着手掌表示支持。"},
+    {id:121,char:"部",pinyin:"bù",en:"measure word for films/books",psle:false,collocations:["一部电影","一部小说","全部"],example:"最近上映了一部电影，讲述了新加坡建国的历史。"},
+  ]},
+  2:{title:"我们是兄弟姐妹",words:[
+    {id:201,char:"苹果",pinyin:"píng guǒ",en:"apple",psle:false,collocations:["吃着苹果","爱吃苹果","一袋苹果"],example:"妈妈今天买了一袋红苹果。"},
+    {id:202,char:"讨论着",pinyin:"tǎo lùn zhe",en:"discussing",psle:false,collocations:["讨论着计划","大家讨论着","讨论着问题"],example:"老师们个个发表意见，讨论着明年的教学计划。"},
+    {id:203,char:"词语",pinyin:"cí yǔ",en:"words and expressions",psle:false,collocations:["学习词语","词语填空","掌握词语"],example:"老师叫我们把本课的词语各抄写三遍，牢牢记住。"},
+    {id:204,char:"串",pinyin:"chuàn",en:"string / bunch (measure word)",psle:false,collocations:["一串鱼丸","一串烟花棒","一串葡萄"],example:"妈妈在市场买了一串鱼丸，准备煮汤。"},
+    {id:205,char:"鱼丸",pinyin:"yú wán",en:"fish ball",psle:false,collocations:["一串鱼丸","吃鱼丸","鱼丸汤"],example:"这家小贩中心的鱼丸汤非常好吃，每天都大排长龙。"},
+    {id:206,char:"小鼓",pinyin:"xiǎo gǔ",en:"side drum / small drum",psle:false,collocations:["敲小鼓","一面小鼓","打小鼓"],example:"弟弟在台上卖力地敲着小鼓，为队伍加油。"},
+    {id:207,char:"帽子",pinyin:"mào zi",en:"hat",psle:false,collocations:["戴帽子","一顶帽子","摘帽子"],example:"今天太阳很大，妈妈叫我戴帽子出门。"},
+    {id:208,char:"外套",pinyin:"wài tào",en:"jacket / coat",psle:false,collocations:["穿外套","一件外套","脱外套"],example:"天气有点凉，妈妈叮嘱我穿上外套再出门。"},
+    {id:209,char:"递",pinyin:"dì",en:"to pass / to hand",psle:false,collocations:["递给","递过去","递上去"],example:"妈妈递给我五块钱，让我去买午餐。"},
+    {id:210,char:"姑姑",pinyin:"gū gu",en:"aunt (father's sister)",psle:false,collocations:["姑姑家","亲爱的姑姑","拜访姑姑"],example:"每年过年，我们都会去姑姑家拜年。"},
+    {id:211,char:"烟花棒",pinyin:"yān huā bàng",en:"sparkler",psle:false,collocations:["一支烟花棒","点烟花棒","玩烟花棒"],example:"除夕夜，我们在门口玩着烟花棒，非常开心。"},
+    {id:212,char:"倾盆大雨",pinyin:"qīng pén dà yǔ",en:"downpour / heavy rain",psle:false,collocations:["下起倾盆大雨","一场倾盆大雨","遇上倾盆大雨"],example:"运动会还没结束，突然下起倾盆大雨，同学们纷纷往室内跑。"},
+    {id:213,char:"暖暖",pinyin:"nuǎn nuǎn",en:"warm and cozy",psle:false,collocations:["暖暖的","感觉暖暖的","全身暖暖的"],example:"穿上外套以后，顿时感觉全身暖暖的。"},
+    {id:214,char:"*表示",pinyin:"biǎo shì",en:"to express / to show",psle:true,collocations:["表示欢迎","表示感谢","表示支持","表示赞成"],example:"新同学走进教室时，我们鼓掌表示欢迎。"},
+    {id:215,char:"忽然",pinyin:"hū rán",en:"suddenly",psle:false,collocations:["忽然下雨","忽然出现","忽然想到"],example:"忽然下起了大雨，小明没带伞，结果被淋成了落汤鸡。"},
+    {id:216,char:"灵机一动",pinyin:"líng jī yī dòng",en:"a sudden brainwave",psle:false,collocations:["灵机一动想到","灵机一动说","灵机一动发现"],example:"王老师灵机一动，想到了一个好办法，让同学们不再争吵。"},
+    {id:217,char:"挤",pinyin:"jǐ",en:"to squeeze / crowd",psle:false,collocations:["人山人海地挤","挤在一起","挤进去"],example:"表演结束后，观众们拥挤着往出口走，非常拥挤。"},
+    {id:218,char:"靠",pinyin:"kào",en:"to lean against / close to",psle:false,collocations:["靠着","背靠背","靠近"],example:"照片上背靠背坐着的两个人，一个是小丽，另一个是她的好朋友。"},
+    {id:219,char:"撑着",pinyin:"chēng zhe",en:"holding up (umbrella)",psle:false,collocations:["撑着伞","撑着身体","撑着走"],example:"她撑着一把花伞，走在细雨中，显得格外优雅。"},
+    {id:220,char:"急急忙忙",pinyin:"jí jí máng máng",en:"in a hurry",psle:false,collocations:["急急忙忙地跑","急急忙忙出门","急急忙忙赶到"],example:"弟弟急急忙忙地跑出家门，差点忘了带书包。"},
+    {id:221,char:"乌云",pinyin:"wū yún",en:"dark clouds / black clouds",psle:false,collocations:["乌云密布","乌云遮天","乌云散去"],example:"天空乌云密布，恐怕就要下雨了，你出门时要记得带伞。"},
+    {id:222,char:"*担心",pinyin:"dān xīn",en:"to worry / to be concerned",psle:true,collocations:["担心安全","十分担心","不必担心","担心成绩"],example:"妹妹一连几天高烧不退，令妈妈十分担心。"},
+    {id:223,char:"不怕",pinyin:"bú pà",en:"not afraid / fearless",psle:false,collocations:["勇敢不怕","不怕困难","不怕危险"],example:"她勇敢地走上台，完全不怕那么多观众注视着她。"},
+  ]},
+  3:{title:"爸爸，对不起",words:[
+    {id:301,char:"*尊敬",pinyin:"zūn jìng",en:"to respect",psle:true,collocations:["尊敬长辈","受人尊敬","尊敬老师"],example:"林叔叔不但知识丰富，而且待人亲切，大家都很尊敬他。"},
+    {id:302,char:"长辈",pinyin:"zhǎng bèi",en:"elders / senior members",psle:false,collocations:["尊敬长辈","长辈教导","孝顺长辈"],example:"王伯伯是我们村里德高望重的长辈，大家都很尊重他。"},
+    {id:303,char:"偷",pinyin:"tōu",en:"to steal",psle:false,collocations:["偷东西","偷偷地","偷拿"],example:"弟弟把今天考试不及格的事偷偷瞒着爸妈，不敢告诉他们。"},
+    {id:304,char:"警察",pinyin:"jǐng chá",en:"police",psle:false,collocations:["警察叔叔","报警察","警察局"],example:"那个男子偷了老奶奶的手提袋，幸好路过的警察及时把他抓住了。"},
+    {id:305,char:"后悔",pinyin:"hòu huǐ",en:"to regret",psle:false,collocations:["感到后悔","后悔不已","后悔莫及"],example:"因为沉迷于电脑游戏，我的成绩退步了很多，我感到十分后悔。"},
+    {id:306,char:"发脾气",pinyin:"fā pí qi",en:"to lose one's temper",psle:false,collocations:["乱发脾气","发脾气骂人","忍住不发脾气"],example:"妈妈告诫我们，遇到问题不能乱发脾气，要冷静地想办法解决。"},
+    {id:307,char:"吵架",pinyin:"chǎo jià",en:"to quarrel / to argue",psle:false,collocations:["和朋友吵架","吵架和好","大声吵架"],example:"两个小朋友因为抢玩具而吵架，最后在老师的劝导下和好了。"},
+    {id:308,char:"模型",pinyin:"mó xíng",en:"model",psle:false,collocations:["飞机模型","制作模型","一个模型"],example:"哥哥花了整整三天时间，亲手制作了一架精致的飞机模型。"},
+    {id:309,char:"碗",pinyin:"wǎn",en:"bowl (measure word)",psle:false,collocations:["一碗面","碗里","端碗"],example:"妈妈端来一碗热腾腾的云吞面，香气扑鼻。"},
+    {id:310,char:"云吞面",pinyin:"yún tūn miàn",en:"wonton noodle",psle:false,collocations:["一碗云吞面","吃云吞面","煮云吞面"],example:"这家小贩中心的云吞面远近驰名，每天都大排长龙。"},
+    {id:311,char:"最近",pinyin:"zuì jìn",en:"recently / lately",psle:false,collocations:["最近发生","最近学到","最近一段时间"],example:"最近天气变化无常，时而晴天，时而下雨，大家出门要记得带伞。"},
+    {id:312,char:"迷上了",pinyin:"mí shàng le",en:"be fascinated by / crazy about",psle:false,collocations:["迷上了下棋","迷上了画画","迷上了音乐"],example:"姐姐最近迷上了下棋，每天晚上都让爷爷陪她下棋。"},
+    {id:313,char:"舍不得",pinyin:"shě bu de",en:"cannot bear to / reluctant to",psle:false,collocations:["舍不得离开","舍不得花钱","舍不得丢掉"],example:"游乐场实在太好玩了，天快黑了，我和弟弟还舍不得离开。"},
+    {id:314,char:"睁开",pinyin:"zhēng kāi",en:"to open (eyes) / wake up",psle:false,collocations:["睁开眼睛","睁开双眼","努力睁开"],example:"我昨晚写作业写到半夜才睡，今天早上困得不愿睁开眼睛。"},
+    {id:315,char:"补习",pinyin:"bǔ xí",en:"tuition / extra lessons",psle:false,collocations:["上补习班","补习功课","请补习老师"],example:"小明每天放学后都要去补习，学习华文和数学。"},
+    {id:316,char:"眼泪",pinyin:"yǎn lèi",en:"tears",psle:false,collocations:["流眼泪","擦眼泪","忍住眼泪"],example:"看到这么感人的电影，妈妈忍不住流下了眼泪。"},
+    {id:317,char:"慌",pinyin:"huāng",en:"flustered / panicked",psle:false,collocations:["慌了手脚","惊慌失措","心慌意乱"],example:"听到门外的声音，弟弟慌了手脚，连书包都忘记拿就跑出去了。"},
+    {id:318,char:"落",pinyin:"luò",en:"to drop / to fall",psle:false,collocations:["落下来","落在地上","落泪"],example:"一阵风吹来，树上的叶子纷纷落了下来，铺满了整条小路。"},
+    {id:319,char:"您",pinyin:"nín",en:"you (respectful form)",psle:false,collocations:["您好","谢谢您","请问您"],example:"奶奶，您今天身体好些了吗？我们来看望您了。"},
+    {id:320,char:"批评",pinyin:"pī píng",en:"to criticise",psle:false,collocations:["批评错误","受到批评","严厉批评"],example:"老师批评了在走廊奔跑的同学，提醒大家注意安全。"},
+    {id:321,char:"说谎",pinyin:"shuō huǎng",en:"to lie / to tell a lie",psle:false,collocations:["说谎骗人","不能说谎","说谎被发现"],example:"妈妈责问弟弟为什么说谎，弟弟羞愧地低下了头。"},
+  ]},
+  4:{title:"负责任的孩子",words:[
+    {id:401,char:"负责",pinyin:"fù zé",en:"to be responsible for",psle:false,collocations:["负责任","负责打扫","负责管理","认真负责"],example:"老师告诉我们，值日生需要负责扫地、擦桌椅和关风扇。"},
+    {id:402,char:"提醒",pinyin:"tí xǐng",en:"to remind",psle:false,collocations:["提醒同学","提醒注意","提醒他人"],example:"图书管理员耐心地提醒我要保持安静，不要打扰到正在阅读的同学。"},
+    {id:403,char:"劝告",pinyin:"quàn gào",en:"to advise / advice",psle:false,collocations:["听从劝告","劝告朋友","接受劝告"],example:"我听取了班长的劝告，再也没有在走廊上追跑打闹了。"},
+    {id:404,char:"注意",pinyin:"zhù yì",en:"to pay attention / be careful",psle:false,collocations:["注意安全","注意卫生","注意身体"],example:"在小贩中心用餐时，我们应该注意卫生，保持环境干净。"},
+    {id:405,char:"保证",pinyin:"bǎo zhèng",en:"to guarantee / to promise",psle:false,collocations:["保证做到","向妈妈保证","保证不再犯"],example:"立明知道错了，便向妈妈保证以后再也不偷东西了。"},
+    {id:406,char:"由于",pinyin:"yóu yú",en:"due to / because of",psle:false,collocations:["由于下雨","由于生病","由于努力"],example:"由于地面非常湿滑，我行走时特别小心。"},
+    {id:407,char:"影响",pinyin:"yǐng xiǎng",en:"to influence / effect",psle:false,collocations:["影响学习","影响健康","不良影响"],example:"你说话小声一点，不要影响爸爸休息。"},
+    {id:408,char:"预防",pinyin:"yù fáng",en:"to prevent / prevention",psle:false,collocations:["预防疾病","预防感冒","预防措施"],example:"最近天气变冷了，我们出门时要穿外套，预防感冒。"},
+    {id:409,char:"结束",pinyin:"jié shù",en:"to end / to finish",psle:false,collocations:["活动结束","比赛结束","考试结束"],example:"考试终于结束了，同学们都松了一口气。"},
+    {id:410,char:"继续",pinyin:"jì xù",en:"to continue",psle:false,collocations:["继续努力","继续做功课","继续前进"],example:"时间不早了，我先去洗澡，再继续做功课。"},
+    {id:411,char:"戴",pinyin:"dài",en:"to wear (accessories)",psle:false,collocations:["戴眼镜","戴帽子","戴口罩"],example:"姐姐近视了，要戴眼镜才能看清楚白板上的字。"},
+    {id:412,char:"闷闷不乐",pinyin:"mèn mèn bú lè",en:"unhappy / gloomy",psle:false,collocations:["感到闷闷不乐","闷闷不乐地坐着","闷闷不乐地回家"],example:"弟弟这次的数学测验成绩很差，所以他闷闷不乐的。"},
+    {id:413,char:"胆小",pinyin:"dǎn xiǎo",en:"timid / cowardly",psle:false,collocations:["胆小怕事","十分胆小","胆小的人"],example:"妹妹十分胆小，看到护士向她走来，以为是要打针，吓得哇哇大哭。"},
+    {id:414,char:"骗",pinyin:"piàn",en:"to deceive / to cheat",psle:false,collocations:["骗人","被骗了","欺骗朋友"],example:"四月一日愚人节那天，哥哥骗我说不用上学，我差点儿上当。"},
+    {id:415,char:"训练",pinyin:"xùn liàn",en:"to train / training",psle:false,collocations:["接受训练","训练队员","刻苦训练"],example:"在篮球队接受一段时间的训练后，我的球技进步了很多。"},
+    {id:416,char:"欢迎",pinyin:"huān yíng",en:"to welcome",psle:false,collocations:["表示欢迎","热烈欢迎","欢迎光临"],example:"当我们到达老人院时，院长站在门口欢迎我们。"},
+    {id:417,char:"鼓励",pinyin:"gǔ lì",en:"to encourage",psle:false,collocations:["鼓励同学","受到鼓励","鼓励参赛"],example:"在妈妈的鼓励下，我决定报名参加演讲比赛。"},
+    {id:418,char:"丰富",pinyin:"fēng fù",en:"rich / abundant",psle:false,collocations:["丰富经验","内容丰富","丰富多彩"],example:"学校的课外辅助活动很丰富，除了华乐团、合唱团，还有机器人小组。"},
+    {id:419,char:"辛苦",pinyin:"xīn kǔ",en:"hardworking / toilsome",psle:false,collocations:["十分辛苦","辛苦工作","辛苦了"],example:"清洁工人在火热的太阳底下工作，非常辛苦。"},
+    {id:420,char:"坚持",pinyin:"jiān chí",en:"to persist / to keep going",psle:false,collocations:["坚持下去","坚持到底","坚持练习"],example:"国华赛跑时跌倒受伤了，但是他坚持跑到终点。"},
+    {id:421,char:"幸运",pinyin:"xìng yùn",en:"lucky / fortunate",psle:false,collocations:["十分幸运","幸运地","幸运儿"],example:"妈妈在抽奖活动中抽到一等奖，真是太幸运了！"},
+    {id:422,char:"分享",pinyin:"fēn xiǎng",en:"to share",psle:false,collocations:["分享喜悦","和大家分享","分享经验"],example:"我一回到家，就迫不及待地和家人分享我得奖的好消息。"},
+  ]},
+  5:{title:"登上健康特快车",words:[
+    {id:501,char:"预防针",pinyin:"yù fáng zhēn",en:"vaccination / injection",psle:false,collocations:["打预防针","注射预防针","接种预防针"],example:"学校安排同学们打预防针，以预防各种传染病。"},
+    {id:502,char:"体育",pinyin:"tǐ yù",en:"physical education / sports",psle:false,collocations:["体育课","体育活动","体育锻炼"],example:"我最喜欢上体育课，因为可以和同学们一起做运动。"},
+    {id:503,char:"课室",pinyin:"kè shì",en:"classroom",psle:false,collocations:["在课室","课室里","整洁的课室"],example:"上课铃响了，同学们纷纷回到课室，安静地等待老师来上课。"},
+    {id:504,char:"结束",pinyin:"jié shù",en:"to end / to finish",psle:false,collocations:["活动结束","比赛结束","课程结束"],example:"考试终于结束了，同学们都松了一口气。"},
+    {id:505,char:"继续",pinyin:"jì xù",en:"to continue",psle:false,collocations:["继续努力","继续做功课","继续前进"],example:"时间不早了，我先去洗澡，再继续做功课。"},
+    {id:506,char:"发烧",pinyin:"fā shāo",en:"to have a fever",psle:false,collocations:["发烧生病","发高烧","发烧不退"],example:"弟弟昨晚发烧了，妈妈整夜没睡，一直照顾他。"},
+    {id:507,char:"药",pinyin:"yào",en:"medicine",psle:false,collocations:["吃药","喝药","配药"],example:"医生给我开了一些药，叮嘱我按时服用。"},
+    {id:508,char:"洗澡",pinyin:"xǐ zǎo",en:"to have a bath / shower",psle:false,collocations:["洗澡换衣","冲凉洗澡","洗澡水"],example:"爸爸下班回家后，先洗澡换上干净的衣服，才和我们一起吃晚饭。"},
+    {id:509,char:"戴",pinyin:"dài",en:"to wear (accessories)",psle:false,collocations:["戴口罩","戴眼镜","戴帽子"],example:"妈妈提醒我出门时要戴口罩，保护自己和他人。"},
+    {id:510,char:"检查",pinyin:"jiǎn chá",en:"to examine / to check",psle:false,collocations:["检查身体","检查作业","仔细检查"],example:"医生仔细地检查了我的喉咙，说我只是轻微发炎。"},
+    {id:511,char:"项目",pinyin:"xiàng mù",en:"item / event / project",psle:false,collocations:["体育项目","检查项目","活动项目"],example:"这次运动会的项目包括跑步、跳远和接力赛。"},
+    {id:512,char:"*闷闷不乐",pinyin:"mèn mèn bú lè",en:"unhappy / in low spirits",psle:true,collocations:["感到闷闷不乐","闷闷不乐地坐","显得闷闷不乐"],example:"小明考试成绩不理想，一整天都闷闷不乐的。"},
+    {id:513,char:"差",pinyin:"chà",en:"poor / bad / inferior",psle:false,collocations:["成绩差","差劲","相差不多"],example:"他因为没有认真复习，这次考试成绩很差。"},
+    {id:514,char:"胆小鬼",pinyin:"dǎn xiǎo guǐ",en:"coward",psle:false,collocations:["被叫胆小鬼","不是胆小鬼","胆小鬼行为"],example:"哥哥嘲笑我是胆小鬼，但我鼓起勇气爬上了高台。"},
+    {id:515,char:"微笑",pinyin:"wēi xiào",en:"smile",psle:false,collocations:["微笑着","露出微笑","亲切的微笑"],example:"老师微笑着鼓励我，让我重新找回了自信。"},
+    {id:516,char:"松",pinyin:"sōng",en:"to relax / loosen",psle:false,collocations:["放松","松了口气","松开"],example:"考试结束后，我终于松了一口气，感觉轻松多了。"},
+    {id:517,char:"勇敢",pinyin:"yǒng gǎn",en:"brave / courageous",psle:false,collocations:["勇敢地面对","十分勇敢","勇敢的人"],example:"消防员勇敢地冲进火场，救出被困的居民。"},
+    {id:518,char:"骗",pinyin:"piàn",en:"to deceive / to cheat",psle:false,collocations:["骗人","欺骗朋友","被骗了"],example:"四月一日愚人节那天，哥哥骗我说不用上学，我差点儿上当。"},
+    {id:519,char:"并",pinyin:"bìng",en:"used to reinforce a negative",psle:false,collocations:["并不","并没有","并非"],example:"这道题看起来很难，其实并不复杂。"},
+    {id:520,char:"哇",pinyin:"wā",en:"the sound of crying / wow",psle:false,collocations:["哇哇大哭","哇的一声","哇哇叫"],example:"小妹妹摔倒了，哇哇大哭起来，妈妈赶紧跑过来安慰她。"},
+    {id:521,char:"伸出",pinyin:"shēn chū",en:"to stretch / to extend",psle:false,collocations:["伸出手","伸出舌头","伸出援手"],example:"医生叫我伸出舌头，仔细检查我的喉咙。"},
+    {id:522,char:"闭",pinyin:"bì",en:"to shut / to close",psle:false,collocations:["闭上眼睛","闭嘴","闭门"],example:"打针前，我紧紧闭上眼睛，不敢看针头。"},
+  ]},
+  6:{title:"我要参加什么活动呢",words:[
+    {id:601,char:"功夫",pinyin:"gōng fu",en:"martial art / kung fu",psle:false,collocations:["功夫很好","喜欢功夫","中国功夫","学习功夫"],example:"哥哥热爱功夫，决定参加联络所的武术班。"},
+    {id:602,char:"所以",pinyin:"suǒ yǐ",en:"so / therefore",psle:false,collocations:["所以我","因为……所以……","所以才"],example:"因为我和他是同学，所以和他很熟。"},
+    {id:603,char:"武术队",pinyin:"wǔ shù duì",en:"martial arts team",psle:false,collocations:["加入武术队","武术队训练","参加武术队"],example:"学校设有武术队，我决定报名参加。"},
+    {id:604,char:"华族",pinyin:"huá zú",en:"the Chinese nation / ethnic Chinese",psle:false,collocations:["华族音乐","华族武术","华族文化","华族血统"],example:"我参加了学校的华乐团，认识了不少热爱华族音乐的朋友。"},
+    {id:605,char:"华乐团",pinyin:"huá yuè tuán",en:"traditional Chinese orchestra",psle:false,collocations:["加入华乐团","华乐团演出","华乐团训练"],example:"学校的华乐团近年培养了不少华乐演奏人才。"},
+    {id:606,char:"训练",pinyin:"xùn liàn",en:"to train / training",psle:false,collocations:["训练开始","严格训练","加强训练","专业训练"],example:"李教练训练运动员非常严格，要求也很高。"},
+    {id:607,char:"开始",pinyin:"kāi shǐ",en:"to begin / start",psle:false,collocations:["开始训练","开始上课","从头开始","训练开始"],example:"吃过了晚饭，我就开始做功课。"},
+    {id:608,char:"欢迎",pinyin:"huān yíng",en:"to welcome / greet",psle:false,collocations:["欢迎新生","欢迎新人","欢迎贵宾"],example:"同学们站起来鼓掌，欢迎新来的老师。"},
+    {id:609,char:"握着",pinyin:"wò zhe",en:"to hold / to grasp",psle:false,collocations:["握着手","握着双手","握着手臂"],example:"弟弟见妈妈要出门，握着妈妈的手不放。"},
+    {id:610,char:"鼓励",pinyin:"gǔ lì",en:"to encourage",psle:false,collocations:["鼓励孩子","不断鼓励","在旁鼓励","称赞鼓励"],example:"小丽对这次的比赛没有信心，我们不断在旁边鼓励她。"},
+    {id:611,char:"机器人",pinyin:"jī qì rén",en:"robot",psle:false,collocations:["发明机器人","机器人比赛","制造机器人"],example:"现在发明的机器人越来越先进，可以代替人类做许多事情。"},
+    {id:612,char:"好久",pinyin:"hǎo jiǔ",en:"a long time",psle:false,collocations:["好久不见","好久没见","等了好久","过了好久"],example:"自从李大华转校后，我好久没跟他联系了。"},
+    {id:613,char:"*丰富",pinyin:"fēng fù",en:"rich / plentiful / abundant",psle:true,collocations:["活动丰富","经验丰富","学识丰富","资源丰富"],example:"他读了很多书，知识非常丰富。"},
+    {id:614,char:"啦",pinyin:"la",en:"particle (end of sentence)",psle:false,collocations:["快到啦","天亮啦","可丰富啦"],example:"大家看，我们快到山顶啦！"},
+    {id:615,char:"童子军",pinyin:"tóng zǐ jūn",en:"boy scouts",psle:false,collocations:["参加童子军","童子军活动","学校童子军"],example:"我参加学校的童子军，每个周末都有活动。"},
+    {id:616,char:"辛苦",pinyin:"xīn kǔ",en:"hard / toilsome",psle:false,collocations:["辛苦工作","十分辛苦","工作辛苦","非常辛苦"],example:"筑路工人在烈日下工作，十分辛苦。"},
+    {id:617,char:"*放弃",pinyin:"fàng qì",en:"to give up",psle:true,collocations:["放弃练习","放弃训练","放弃机会","不要放弃"],example:"由于连日下大雨，我们只好放弃爬山的活动。"},
+    {id:618,char:"坚持",pinyin:"jiān chí",en:"persistence / to keep going",psle:false,collocations:["坚持练习","坚持训练","坚持不懈"],example:"成功来自坚持，只要你不退缩，继续努力，最终一定会达到目标。"},
+    {id:619,char:"段",pinyin:"duàn",en:"quantifier (period / section)",psle:false,collocations:["一段时间","一段路","一段距离"],example:"只要你认真练习，过了一段时间，你就会发现你的书法有进步。"},
+    {id:620,char:"登上",pinyin:"dēng shàng",en:"to mount / climb up onto",psle:false,collocations:["登上舞台","登上讲台","登上山顶"],example:"一听到校长叫我的名字，我立刻快步登上领奖台。"},
+    {id:621,char:"幸运",pinyin:"xìng yùn",en:"lucky / fortunate",psle:false,collocations:["觉得幸运","非常幸运","十分幸运","真够幸运"],example:"他一向比较幸运，每次做事都很顺利。"},
+    {id:622,char:"分享",pinyin:"fēn xiǎng",en:"to share",psle:false,collocations:["分享心得","分享快乐","分享幸福","大家分享"],example:"美华将她获奖的消息告诉了我们，希望和我们一起分享这份喜悦。"},
+    {id:623,char:"健康",pinyin:"jiàn kāng",en:"healthy / health",psle:false,collocations:["健康生长","健康快乐","身体健康","恢复健康"],example:"他的身体一向很健康，很少生病。"},
+  ]},
+  7:{title:"他的脸红了",words:[
+    {id:701,char:"孕妇",pinyin:"yùn fù",en:"pregnant woman",psle:false,collocations:["一位孕妇","照顾孕妇","让位给孕妇"],example:"看见一位孕妇走进车厢，我立刻起身让位。"},
+    {id:702,char:"车厢",pinyin:"chē xiāng",en:"carriage / compartment",psle:false,collocations:["走进车厢","地铁车厢","挤满了车厢"],example:"现在是上学、上班的时间，车厢里挤满了人。"},
+    {id:703,char:"乘客",pinyin:"chéng kè",en:"passenger",psle:false,collocations:["乘客电梯","巴士乘客","地铁乘客","飞机乘客"],example:"现在是下班时间，巴士里挤满了乘客。"},
+    {id:704,char:"*随手",pinyin:"suí shǒu",en:"conveniently / casually",psle:true,collocations:["随手一丢","随手拿起","随手拿走","随手带走"],example:"爸爸一进门，随手把夹在铁门上的报纸拿下来。"},
+    {id:705,char:"塑料袋",pinyin:"sù liào dài",en:"plastic bag",psle:false,collocations:["一个塑料袋","装进塑料袋","提着塑料袋"],example:"外婆来看我们，手里提了一个装满水果的塑料袋。"},
+    {id:706,char:"节约",pinyin:"jié yuē",en:"to save / conserve",psle:false,collocations:["节约用水","节约用电","节约花费","懂得节约"],example:"水是宝贵的，每个人必须要节约用水。"},
+    {id:707,char:"不好意思",pinyin:"bù hǎo yì si",en:"embarrassed / sorry",psle:false,collocations:["感到不好意思","很不好意思","不好意思说"],example:"我今天很匆忙，双脚穿了不同颜色的袜子，被同学们嘲笑，弄得我很不好意思。"},
+    {id:708,char:"劝告",pinyin:"quàn gào",en:"to urge / advise",psle:false,collocations:["听从劝告","听了劝告","接受劝告"],example:"听了老师的劝告，他决定改过自新，重新做人。"},
+    {id:709,char:"*道歉",pinyin:"dào qiàn",en:"to apologize",psle:true,collocations:["亲自道歉","当面道歉","向人道歉"],example:"这是你的错，你应该去向他道歉，她一定不会不理你。"},
+    {id:710,char:"舅舅",pinyin:"jiù jiu",en:"uncle (mother's brother)",psle:false,collocations:["拜访舅舅","舅舅家","亲爱的舅舅"],example:"舅舅今天来我家看我们。"},
+    {id:711,char:"企鹅馆",pinyin:"qǐ é guǎn",en:"Penguin enclosure",psle:false,collocations:["参观企鹅馆","飞禽公园企鹅馆"],example:"飞禽公园里的企鹅馆，养了许多可爱的企鹅。"},
+    {id:712,char:"移动",pinyin:"yí dòng",en:"to move",psle:false,collocations:["移动身体","慢慢移动","向内移动","不断移动"],example:"天空的云朵不停地移动，变出各种形状。"},
+    {id:713,char:"拼命",pinyin:"pīn mìng",en:"with all one's might",psle:false,collocations:["拼命挤前","拼命推挤","拼命工作"],example:"为了争夺冠军，选手们加快脚步，拼命地冲向终点。"},
+    {id:714,char:"挤",pinyin:"jǐ",en:"to push against / squeeze through",psle:false,collocations:["挤进车厢","挤到前面","拼命推挤"],example:"那个中年人不管人多，用力挤进车厢。"},
+    {id:715,char:"终于",pinyin:"zhōng yú",en:"finally / at last",psle:false,collocations:["终于看到","终于成功","终于完成","终于达到"],example:"经过几场比赛后，我校的篮球队终于获得了冠军。"},
+    {id:716,char:"摇摆",pinyin:"yáo bǎi",en:"to sway",psle:false,collocations:["摇摆身体","不停摇摆","迎风摇摆"],example:"风吹来了，树枝不停地摇摆。"},
+    {id:717,char:"胖乎乎",pinyin:"pàng hū hū",en:"pudgy / chubby",psle:false,collocations:["胖乎乎的身体","长得胖乎乎","胖乎乎的脸"],example:"这小男孩长得胖乎乎的，太可爱了。"},
+    {id:718,char:"圆滚滚",pinyin:"yuán gǔn gǔn",en:"rounded / plump",psle:false,collocations:["圆滚滚的身体","长得圆滚滚","圆滚滚的肚子"],example:"企鹅圆滚滚的身体，一摇一摆地走在滑溜的雪地上，看起来太有趣了。"},
+    {id:719,char:"秩序",pinyin:"zhì xù",en:"orderly / order",psle:false,collocations:["秩序井然","很有秩序","遵守秩序"],example:"钟声响了，同学们很有秩序地排队到操场参加升旗礼。"},
+    {id:720,char:"耐心",pinyin:"nài xīn",en:"patient / patience",psle:false,collocations:["耐心等待","耐心排队","要有耐心","很有耐心"],example:"只要你能耐心学习，过一段时间，一定能把华文学好。"},
+    {id:721,char:"等待",pinyin:"děng dài",en:"to wait",psle:false,collocations:["等待好久","耐心等待"],example:"弟弟坐在沙发上，等待公公给他讲故事。"},
+    {id:722,char:"乱抢",pinyin:"luàn qiǎng",en:"to snatch disorderly",psle:false,collocations:["乱抢食物","没有乱抢","争前乱抢"],example:"小朋友们有秩序地排队领取礼包，没有一个乱抢。"},
+    {id:723,char:"悄悄",pinyin:"qiāo qiāo",en:"quietly / stealthily",psle:false,collocations:["悄悄离开","悄悄观察","悄悄落泪","悄悄离去"],example:"看到妈妈在睡觉，我悄悄地把房门关上。"},
+  ]},
+  8:{title:"马路如虎口",words:[
+    {id:801,char:"危险",pinyin:"wēi xiǎn",en:"dangerous / danger",psle:false,collocations:["十分危险","非常危险","危险动作","脱离危险"],example:"在马路上玩耍是非常危险的，大家一定要小心。"},
+    {id:802,char:"*遵守",pinyin:"zūn shǒu",en:"to comply with / to abide by",psle:true,collocations:["遵守规则","遵守交通规则","遵守纪律"],example:"每个人都应该遵守交通规则，才能减少意外的发生。"},
+    {id:803,char:"交通",pinyin:"jiāo tōng",en:"traffic",psle:false,collocations:["交通规则","交通事故","交通灯","交通阻塞"],example:"这条路的交通十分繁忙，每天早上都会发生交通阻塞。"},
+    {id:804,char:"规则",pinyin:"guī zé",en:"rules / regulations",psle:false,collocations:["遵守规则","交通规则","比赛规则"],example:"工厂规定工人必须遵守规则，大家都照做了。"},
+    {id:805,char:"车祸",pinyin:"chē huò",en:"traffic accident / road accident",psle:false,collocations:["发生车祸","严重车祸","避免车祸"],example:"今天早上发生了一场严重车祸，好几个人受了伤。"},
+    {id:806,char:"救护车",pinyin:"jiù hù chē",en:"ambulance",psle:false,collocations:["叫救护车","救护车赶到","救护车鸣笛"],example:"救护车赶到现场后，立刻将伤者送往医院。"},
+    {id:807,char:"另",pinyin:"lìng",en:"another / other",psle:false,collocations:["另一个","另外","另一方面"],example:"我还有另一件事想告诉你。"},
+    {id:808,char:"照顾",pinyin:"zhào gù",en:"to look after / take care of",psle:false,collocations:["照顾病人","照顾家人","细心照顾"],example:"妈妈生病了，爸爸细心地照顾她，寸步不离。"},
+    {id:809,char:"指挥",pinyin:"zhǐ huī",en:"to command / to direct",psle:false,collocations:["指挥交通","指挥工人","发出指挥"],example:"在消防员的指挥下，被困在火场的居民顺利地脱离了危险。"},
+    {id:810,char:"巨大",pinyin:"jù dà",en:"huge / enormous",psle:false,collocations:["巨大声响","巨大变化","巨大影响"],example:"比赛结束后，现场发出一阵巨大的欢呼声。"},
+    {id:811,char:"司机",pinyin:"sī jī",en:"driver",psle:false,collocations:["巴士司机","出租车司机","司机师傅"],example:"这位司机驾驶多年，从来没有发生过交通意外。"},
+    {id:812,char:"被",pinyin:"bèi",en:"by (passive marker)",psle:false,collocations:["被老师批评","被表扬","被困住"],example:"他不小心打破了花瓶，被妈妈骂了一顿。"},
+    {id:813,char:"困",pinyin:"kùn",en:"to be stranded / trapped",psle:false,collocations:["被困在","困在里面","困住了"],example:"电梯的门突然坏了，我和姐姐被困在电梯里，没办法出去。"},
+    {id:814,char:"到达",pinyin:"dào dá",en:"to arrive (at a destination)",psle:false,collocations:["到达目的地","顺利到达","到达现场"],example:"经过两个小时的车程，我们终于到达了目的地。"},
+    {id:815,char:"顺利",pinyin:"shùn lì",en:"smoothly / successfully",psle:false,collocations:["顺利完成","顺利到达","顺利通过"],example:"经过不断努力，姐姐顺利通过考试，进入了大学。"},
+    {id:816,char:"血",pinyin:"xiě",en:"blood",psle:false,collocations:["流血","血迹","献血"],example:"他摔倒后膝盖流了很多血，妈妈连忙帮他包扎伤口。"},
+    {id:817,char:"采访",pinyin:"cǎi fǎng",en:"to gather news / to interview",psle:false,collocations:["进行采访","记者采访","采访活动"],example:"记者正在街头进行采访，了解民众对新政策的看法。"},
+    {id:818,char:"标题",pinyin:"biāo tí",en:"title / heading",psle:false,collocations:["文章标题","新闻标题","一个标题"],example:"这篇文章的标题非常吸引人，让我很想读下去。"},
+    {id:819,char:"见义勇为",pinyin:"jiàn yì yǒng wéi",en:"to act bravely for a just cause",psle:false,collocations:["见义勇为的精神","做到见义勇为","见义勇为的行为"],example:"那个男子抢走老奶奶的手提袋，一名路人见义勇为，追上前抓住了男子。"},
+    {id:820,char:"获得",pinyin:"huò dé",en:"to obtain / to receive",psle:false,collocations:["获得表扬","获得冠军","获得奖励"],example:"他努力训练，终于在比赛中获得了冠军。"},
+    {id:821,char:"*表扬",pinyin:"biǎo yáng",en:"to commend / to praise",psle:true,collocations:["获得表扬","受到表扬","老师表扬","加以表扬"],example:"大哥做事认真负责，多次受到老板的表扬。"},
+  ]},
+  9:{title:"爱心无障碍",words:[
+    {id:901,char:"盲道",pinyin:"máng dào",en:"blind path / tactile pavement",psle:false,collocations:["建有盲道","走在盲道","盲道直达"],example:"这里的人行道都建有盲道，盲人出入方便多了。"},
+    {id:902,char:"熟食中心",pinyin:"shú shí zhōng xīn",en:"hawker centre",psle:false,collocations:["去熟食中心","熟食中心的摊位","附近的熟食中心"],example:"这个熟食中心的虾面，生意特别好。"},
+    {id:903,char:"居民",pinyin:"jū mín",en:"resident / inhabitant",psle:false,collocations:["组屋居民","城市居民","乡村居民"],example:"组屋区有不少商店和小贩中心，给居民的生活提供了方便。"},
+    {id:904,char:"提供",pinyin:"tí gōng",en:"to provide",psle:false,collocations:["提供便利","提供服务","提供援助","提供经验"],example:"旅游局提供免费巴士，为前往圣淘沙观光的游客服务。"},
+    {id:905,char:"地铁",pinyin:"dì tiě",en:"MRT / underground train",psle:false,collocations:["地铁车厢","乘坐地铁","地铁站","修建地铁"],example:"爸爸每天乘坐地铁去上班。"},
+    {id:906,char:"座位",pinyin:"zuò wèi",en:"seat",psle:false,collocations:["优先座位","车厢座位","让出座位"],example:"演唱会要开始了，座位都坐满了。"},
+    {id:907,char:"水沟",pinyin:"shuǐ gōu",en:"drain",psle:false,collocations:["水沟旁边","清理水沟","挖掘水沟"],example:"有几个工人正在清理水沟里的垃圾。"},
+    {id:908,char:"清洁工人",pinyin:"qīng jié gōng rén",en:"street cleaner",psle:false,collocations:["辛苦的清洁工人","清洁工人打扫"],example:"有几个清洁工人在路旁打扫马路。"},
+    {id:909,char:"饮料",pinyin:"yǐn liào",en:"beverage / drink",psle:false,collocations:["饮料摊位","果汁饮料","无糖饮料"],example:"弟弟最喜欢喝的饮料是汽水。"},
+    {id:910,char:"摊位",pinyin:"tān wèi",en:"stall",psle:false,collocations:["摊位出租","饮料摊位","水果摊位","租用摊位"],example:"大哥在熟食中心租了一个摊位来卖水果。"},
+    {id:911,char:"糖果店",pinyin:"táng guǒ diàn",en:"candy store / sweet shop",psle:false,collocations:["附近的糖果店","去糖果店","糖果店买糖"],example:"弟弟吵着要吃糖果，我只好带他到附近的糖果店去买。"},
+    {id:912,char:"快餐店",pinyin:"kuài cān diàn",en:"fast-food restaurant",psle:false,collocations:["一般快餐店","去快餐店","快餐店吃东西"],example:"弟弟到快餐店吃东西，一定要吃炸薯条。"},
+    {id:913,char:"讨厌",pinyin:"tǎo yàn",en:"to dislike / annoying",psle:false,collocations:["令人讨厌","一向讨厌","十分讨厌"],example:"我们都讨厌小华，因为他做事反反复复的，真令人讨厌。"},
+    {id:914,char:"口味",pinyin:"kǒu wèi",en:"person's taste / flavour",psle:false,collocations:["合口味","各人口味","不合口味"],example:"妈妈最近爱吃的鸡肉大成了，不合我的口味。"},
+    {id:915,char:"一般",pinyin:"yī bān",en:"generally / ordinary",psle:false,collocations:["一般食店","一般孩子","一般情形"],example:"爸爸一般早出门，一般要到天黑才回家。"},
+    {id:916,char:"其中",pinyin:"qí zhōng",en:"among / in it",psle:false,collocations:["其中一个","其中包括","乐在其中","参与其中"],example:"我们全班有三十个学生，其中以亮亮长得最高。"},
+    {id:917,char:"辣味",pinyin:"là wèi",en:"spicy flavour",psle:false,collocations:["辣味鸡腿","辣味炸鸡"],example:"爸爸妈妈带我去快餐店，我要了一份辣味炸鸡腿。"},
+    {id:918,char:"鲜橙汁",pinyin:"xiān chéng zhī",en:"fresh orange juice",psle:false,collocations:["一杯鲜橙汁","喝鲜橙汁","新鲜鲜橙汁"],example:"今天在快餐店吃东西，我要了一杯鲜橙汁。"},
+    {id:919,char:"告示牌",pinyin:"gào shì pái",en:"notice / noticeboard",psle:false,collocations:["布告告示牌","通告告示牌","一个告示牌"],example:"前面有一个告示牌，提醒爬山人士避免下水游泳和钓鱼。"},
+    {id:920,char:"清楚",pinyin:"qīng chǔ",en:"clear / clearly",psle:false,collocations:["说清楚","听清楚","看清楚","解释清楚"],example:"你解释得很清楚，我听懂了。"},
+    {id:921,char:"依然",pinyin:"yī rán",en:"still / as before",psle:false,collocations:["依然没有","依然如故","依然不变"],example:"我问了他两次，他依然不说话。"},
+    {id:922,char:"笨",pinyin:"bèn",en:"stupid / clumsy",psle:false,collocations:["真笨","笨手笨脚","不是笨"],example:"我真是笨，这么一点东西都学不会！"},
+    {id:923,char:"而是",pinyin:"ér shì",en:"but rather / and yet",psle:false,collocations:["不是……而是……","并非……而是……"],example:"我来海边并不是要游泳，而是要欣赏海景。"},
+    {id:924,char:"离开",pinyin:"lí kāi",en:"to leave",psle:false,collocations:["离开餐馆","离开家乡","悄悄离开","决心离开"],example:"爷爷在十八岁那年，离开家乡到新加坡来谋生。"},
+  ]},
+};
+
+// ── TTS ──────────────────────────────────────
+let bestVoice=null,voicesLoaded=false;
+const FEM=['Xiaoxiao','Xiaoyi','Tingting','Meijia','Hanhan','Sin-ji','Sinji','Mei-Jia'];
+const MAL=['Yunyang','Yunxi','Kangkang','Yunjian','Yunhao','Yunfeng'];
+const isFem=v=>FEM.some(n=>v.name.includes(n));
+const isMal=v=>MAL.some(n=>v.name.includes(n));
+function pickVoice(voices){
+  const zh=voices.filter(v=>v.lang?.startsWith('zh'));
+  if(!zh.length)return null;
+  const tries=[
+    ()=>zh.find(v=>v.name.includes('Xiaoxiao')&&v.name.toLowerCase().includes('neural')),
+    ()=>zh.find(v=>v.lang.startsWith('zh-CN')&&v.name.toLowerCase().includes('neural')&&isFem(v)),
+    ()=>zh.find(v=>v.lang.startsWith('zh-CN')&&isFem(v)),
+    ()=>zh.find(v=>v.lang.startsWith('zh-CN')&&!isMal(v)),
+    ()=>zh.find(v=>isFem(v)),
+    ()=>zh[0],
+  ];
+  for(const fn of tries){const m=fn();if(m)return m;}
+  return null;
+}
+function initVoices(){
+  if(!window.speechSynthesis)return;
+  const v=window.speechSynthesis.getVoices();
+  if(v.length){bestVoice=pickVoice(v);voicesLoaded=true;}
+}
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged=initVoices;
+  window.speechSynthesis.getVoices();
+  setTimeout(initVoices,300);setTimeout(initVoices,1000);
+}
+let resumeTimer=null;
+function speak(text){
+  if(!window.speechSynthesis)return;
+  if(!voicesLoaded)initVoices();
+  if(resumeTimer){clearInterval(resumeTimer);resumeTimer=null;}
+  window.speechSynthesis.cancel();
+  setTimeout(()=>{
+    const u=new SpeechSynthesisUtterance(text);
+    if(bestVoice){u.voice=bestVoice;u.lang=bestVoice.lang;}else u.lang='zh-CN';
+    u.rate=0.85;u.pitch=1.0;u.volume=1.0;
+    u.onstart=()=>{resumeTimer=setInterval(()=>{if(window.speechSynthesis.speaking){window.speechSynthesis.pause();window.speechSynthesis.resume();}else{clearInterval(resumeTimer);resumeTimer=null;}},10000);};
+    u.onend=u.onerror=()=>{if(resumeTimer){clearInterval(resumeTimer);resumeTimer=null;}};
+    window.speechSynthesis.speak(u);
+  },50);
+}
+
+function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+const allWords=()=>Object.values(VOCAB).flatMap(l=>l.words);
+
+const SIDEBAR=[
+  {id:"home",icon:"🏠",label:"主页"},
+  {id:"flashcard",icon:"🃏",label:"认字卡片"},
+  {id:"quiz",icon:"✅",label:"选择测验"},
+  {id:"colloc",icon:"🔗",label:"词语搭配"},
+  {id:"progress",icon:"📊",label:"我的进度"},
+];
+
+export default function App(){
+  const [tab,setTab]=useState("home");
+  const [lesson,setLesson]=useState(0);
+  const [prog,setProg]=useState(()=>{const p={};allWords().forEach(w=>{p[w.id]=0;});return p;});
+  const [streak,setStreak]=useState(0);
+  const mastered=Object.values(prog).filter(v=>v===3).length;
+  const wordsFor=l=>l===0?allWords():(VOCAB[l]?.words||[]);
+
+  return(
+    <div style={{fontFamily:"system-ui,sans-serif",minHeight:"100vh",background:"#eef0fb",color:"#1a1a2e",display:"flex"}}>
+      <div style={{width:200,background:"#3d2fa0",padding:"22px 12px",display:"flex",flexDirection:"column",gap:6,flexShrink:0}}>
+        <div style={{color:"#fff",fontWeight:700,fontSize:"1.05rem",textAlign:"center",marginBottom:14}}>
+          ⭐ 高华词语
+          <div style={{fontSize:".72rem",opacity:.7,fontWeight:400,marginTop:2}}>P4 中文复习</div>
+        </div>
+        <div style={{height:1,background:"rgba(255,255,255,.2)",margin:"2px 0 6px"}}/>
+        {SIDEBAR.map(s=>(
+          <button key={s.id} onClick={()=>setTab(s.id)} style={{
+            background:tab===s.id?"#fff":"rgba(255,255,255,.12)",border:"none",borderRadius:9,
+            padding:"10px 12px",color:tab===s.id?"#3d2fa0":"#fff",
+            fontWeight:tab===s.id?700:400,fontSize:".85rem",cursor:"pointer",textAlign:"left",width:"100%",transition:".2s"}}>
+            {s.icon} {s.label}
+          </button>
+        ))}
+        <div style={{height:1,background:"rgba(255,255,255,.2)",margin:"6px 0"}}/>
+        <div style={{color:"rgba(255,255,255,.6)",fontSize:".75rem",padding:"2px 6px",lineHeight:1.7}}>
+          🔥 连胜 {streak}<br/>⭐ 掌握 {mastered}/{allWords().length}
+        </div>
+      </div>
+      <div style={{flex:1,padding:"26px 30px",overflowY:"auto"}}>
+        {tab==="home"      && <HomePage      setTab={setTab} setLesson={setLesson} prog={prog}/>}
+        {tab==="flashcard" && <FlashcardMode words={wordsFor(lesson)} lesson={lesson} setLesson={setLesson} prog={prog} setProg={setProg} setStreak={setStreak}/>}
+        {tab==="quiz"      && <QuizMode      words={wordsFor(lesson)} lesson={lesson} setLesson={setLesson} prog={prog} setProg={setProg} setStreak={setStreak} streak={streak}/>}
+        {tab==="colloc"    && <CollocMode    lesson={lesson} setLesson={setLesson}/>}
+        {tab==="progress"  && <ProgressMode  prog={prog} setProg={setProg}/>}
+      </div>
+    </div>
+  );
+}
+
+function Strip({pct}){
+  return(<div style={{height:5,background:"#e0e0f0",borderRadius:20,marginBottom:16}}><div style={{height:5,background:"#3d2fa0",borderRadius:20,width:`${pct}%`,transition:".4s"}}/></div>);
+}
+function SpeakBtn({onClick,label="🔊",primary=false,style:s={}}){
+  return(<button onClick={onClick} style={{background:primary?"#3d2fa0":"#eef0fb",color:primary?"#fff":"#3d2fa0",border:`1px solid ${primary?"#3d2fa0":"#ccd"}`,borderRadius:8,padding:"6px 13px",fontSize:".8rem",cursor:"pointer",...s}}>{label}</button>);
+}
+function PsleBadge(){
+  return(<span style={{background:"#fff3cd",color:"#856404",fontSize:10,padding:"1px 6px",borderRadius:6,marginLeft:6,fontWeight:700}}>PSLE</span>);
+}
+function LessonPicker({lesson,setLesson}){
+  return(
+    <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:20}}>
+      <span style={{fontSize:".85rem",color:"#666"}}>选择课程：</span>
+      {[{v:0,l:"全部"},...Object.entries(VOCAB).map(([k])=>({v:Number(k),l:`第${k}课`}))].map(({v,l})=>(
+        <button key={v} onClick={()=>setLesson(v)} style={{
+          background:lesson===v?"#3d2fa0":"#fff",color:lesson===v?"#fff":"#3d2fa0",
+          border:"2px solid #3d2fa0",borderRadius:8,padding:"5px 13px",
+          cursor:"pointer",fontWeight:lesson===v?700:400,fontSize:".83rem",transition:".2s"}}>
+          {l}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function HomePage({setTab,setLesson,prog}){
+  const total=allWords().length;
+  const mastered=Object.values(prog).filter(v=>v===3).length;
+  const pct=Math.round(mastered/total*100);
+  return(
+    <div>
+      <div style={{marginBottom:24}}>
+        <h1 style={{fontSize:"1.7rem",fontWeight:700,color:"#3d2fa0"}}>你好！👋 准备好复习了吗？</h1>
+        <p style={{color:"#666",marginTop:4}}>华文小四上 · {Object.keys(VOCAB).length}课 · {total}个词语</p>
+      </div>
+      <div style={{background:"#fff",borderRadius:14,padding:"16px 22px",marginBottom:22,display:"flex",alignItems:"center",gap:18}}>
+        <span style={{fontSize:".85rem",color:"#999",whiteSpace:"nowrap"}}>总进度</span>
+        <div style={{flex:1,background:"#e0e0f0",borderRadius:20,height:12}}>
+          <div style={{background:"#3d2fa0",borderRadius:20,height:12,width:`${pct}%`,transition:".5s"}}/>
+        </div>
+        <span style={{fontWeight:700,color:"#3d2fa0",minWidth:38,textAlign:"right"}}>{pct}%</span>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))",gap:12,marginBottom:24}}>
+        {Object.entries(VOCAB).map(([k,v])=>{
+          const m=v.words.filter(w=>prog[w.id]===3).length;
+          const p=Math.round(m/v.words.length*100);
+          return(
+            <div key={k} onClick={()=>{setLesson(Number(k));setTab("flashcard");}}
+              style={{background:"#fff",borderRadius:13,padding:"16px 14px",cursor:"pointer",border:"2px solid transparent",transition:".2s"}}
+              onMouseEnter={e=>e.currentTarget.style.borderColor="#3d2fa0"}
+              onMouseLeave={e=>e.currentTarget.style.borderColor="transparent"}>
+              <div style={{fontWeight:700,color:"#3d2fa0",fontSize:"1.1rem"}}>第{k}课</div>
+              <div style={{fontSize:".8rem",color:"#888",marginTop:2}}>{v.title}</div>
+              <div style={{fontSize:".75rem",color:"#aaa",marginTop:1}}>{v.words.length}个词语</div>
+              <div style={{background:"#e0e0f0",borderRadius:20,height:6,marginTop:10}}>
+                <div style={{background:"#3d2fa0",borderRadius:20,height:6,width:`${p}%`}}/>
+              </div>
+              <div style={{fontSize:".75rem",color:"#3d2fa0",marginTop:4}}>{p>=90?"⭐⭐⭐":p>=60?"⭐⭐":p>0?"⭐":"—"} {p}%</div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14}}>
+        {[
+          {id:"flashcard",icon:"🃏",title:"认字卡片",desc:"看汉字翻开答案，听发音，巩固记忆。"},
+          {id:"quiz",icon:"✅",title:"选择测验",desc:"选出正确英文意思，测试掌握程度。"},
+          {id:"colloc",icon:"🔗",title:"词语搭配",desc:"学习每个词的搭配，点击朗读！",badge:"⚠️ 重点"},
+          {id:"progress",icon:"📊",title:"我的进度",desc:"查看每个词语的掌握情况。"},
+        ].map(({id,icon,title,desc,badge})=>(
+          <div key={id} onClick={()=>setTab(id)}
+            style={{background:"#fff",borderRadius:13,padding:22,cursor:"pointer",border:"2px solid transparent",transition:".2s",position:"relative"}}
+            onMouseEnter={e=>e.currentTarget.style.borderColor="#3d2fa0"}
+            onMouseLeave={e=>e.currentTarget.style.borderColor="transparent"}>
+            {badge&&<div style={{position:"absolute",top:10,right:10,background:"#fff3cd",color:"#856404",fontSize:10,padding:"2px 7px",borderRadius:7,fontWeight:700}}>{badge}</div>}
+            <div style={{fontSize:"2rem",marginBottom:8}}>{icon}</div>
+            <div style={{fontWeight:700,fontSize:"1rem"}}>{title}</div>
+            <div style={{fontSize:".82rem",color:"#666",marginTop:3,lineHeight:1.5}}>{desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FlashcardMode({words,lesson,setLesson,prog,setProg,setStreak}){
+  const [cards]=useState(()=>shuffle(words));
+  const [idx,setIdx]=useState(0);
+  const [flip,setFlip]=useState(false);
+  if(!cards.length)return null;
+  const v=cards[idx%cards.length];
+  const pct=Math.round(idx/cards.length*100);
+
+  function rate(s){
+    setProg(p=>({...p,[v.id]:s}));
+    if(s>=2)setStreak(x=>x+1);else setStreak(0);
+    setFlip(false);setIdx(i=>i+1);
+  }
+
+  if(idx>=cards.length)return(
+    <div style={{textAlign:"center",background:"#fff",borderRadius:14,padding:40,maxWidth:420,margin:"0 auto"}}>
+      <div style={{fontSize:56,marginBottom:12}}>🎉</div>
+      <div style={{fontSize:"1.4rem",fontWeight:700,marginBottom:8}}>完成了！</div>
+      <div style={{color:"#666",marginBottom:22}}>已复习完所选课程的全部词语。</div>
+      <button onClick={()=>setIdx(0)} style={{background:"#3d2fa0",color:"#fff",border:"none",borderRadius:10,padding:"11px 28px",fontWeight:700,cursor:"pointer"}}>再来一次 🔄</button>
+    </div>
+  );
+
+  return(
+    <div>
+      <LessonPicker lesson={lesson} setLesson={l=>{setLesson(l);setIdx(0);setFlip(false);}}/>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+        <h2 style={{fontSize:"1.25rem",fontWeight:700}}>🃏 认字卡片</h2>
+        <span style={{marginLeft:"auto",fontSize:".82rem",color:"#777"}}>{Math.min(idx+1,cards.length)}/{cards.length}</span>
+      </div>
+      <Strip pct={pct}/>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:22,alignItems:"start"}}>
+        <div>
+          <div style={{background:"#fff",borderRadius:13,padding:26,position:"relative",minHeight:180}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+              <div>
+                <div style={{fontSize:"3.8rem",fontWeight:700,lineHeight:1.1}}>{v.char}</div>
+                {v.psle&&<PsleBadge/>}
+                {flip&&<div style={{marginTop:10}}>
+                  <div style={{fontSize:"1.15rem",color:"#3d2fa0",fontWeight:600}}>{v.pinyin}</div>
+                  <div style={{fontSize:".95rem",color:"#444",marginTop:4}}>{v.en}</div>
+                </div>}
+              </div>
+              <SpeakBtn onClick={()=>speak(v.char)}/>
+            </div>
+            {!flip&&<div onClick={()=>setFlip(true)} style={{position:"absolute",inset:0,background:"rgba(255,255,255,.93)",borderRadius:13,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",color:"#3d2fa0",fontWeight:600}}>👆 点击翻开</div>}
+          </div>
+          {flip&&<div style={{display:"flex",gap:10,marginTop:12}}>
+            <button onClick={()=>rate(0)} style={{background:"#e25c5c",color:"#fff",border:"none",borderRadius:10,padding:"11px 18px",fontWeight:600,cursor:"pointer",flex:1}}>😕 还不会</button>
+            <button onClick={()=>rate(3)} style={{background:"#4caf82",color:"#fff",border:"none",borderRadius:10,padding:"11px 18px",fontWeight:600,cursor:"pointer",flex:1}}>😊 认识了！</button>
+          </div>}
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+          {flip&&<div style={{background:"#fff",borderRadius:13,padding:20}}>
+            <div style={{fontSize:".75rem",color:"#999",marginBottom:6}}>例句</div>
+            <div style={{fontSize:".93rem",lineHeight:1.8,color:"#333"}}>{v.example}</div>
+            <SpeakBtn label="🔊 听例句" onClick={()=>speak(v.example)} style={{marginTop:10}}/>
+          </div>}
+          <div style={{background:"#fff",borderRadius:13,padding:16,fontSize:".82rem",color:"#777",lineHeight:1.9}}>
+            <strong style={{color:"#3d2fa0"}}>{"💡 怎么用？"}</strong><br/>
+            1. 看汉字，想想意思<br/>
+            2. 点击卡片翻开答案<br/>
+            3. 点 🔊 听发音<br/>
+            {"4. 选「认识了」或「还不会」"}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QuizMode({words,lesson,setLesson,prog,setProg,setStreak,streak}){
+  const all=allWords();
+  const [qs]=useState(()=>shuffle(words).slice(0,10).map(w=>{
+    const wrong=shuffle(all.filter(x=>x.char!==w.char)).slice(0,3);
+    return{word:w,options:shuffle([w,...wrong])};
+  }));
+  const [idx,setIdx]=useState(0);
+  const [sel,setSel]=useState(null);
+  const [score,setScore]=useState(0);
+  const [done,setDone]=useState(false);
+
+  if(done)return(
+    <div style={{background:"#fff",borderRadius:14,padding:40,textAlign:"center",maxWidth:460,margin:"0 auto"}}>
+      <div style={{fontSize:56,marginBottom:12}}>{score>=8?"🏆":score>=5?"👍":"💪"}</div>
+      <div style={{fontSize:"1.5rem",fontWeight:700,marginBottom:6}}>得分：{score}/10</div>
+      <div style={{color:"#666",marginBottom:22}}>{score>=8?"太棒了！":score>=5?"做得不错！":"多多练习，你一定可以的！"}</div>
+      <button onClick={()=>window.location.reload()} style={{background:"#3d2fa0",color:"#fff",border:"none",borderRadius:10,padding:"13px 30px",fontWeight:700,cursor:"pointer"}}>再来一次 🔄</button>
+    </div>
+  );
+  if(idx>=qs.length){setTimeout(()=>setDone(true),0);return null;}
+  const q=qs[idx];
+
+  function pick(opt){
+    if(sel)return;setSel(opt.char);
+    const ok=opt.char===q.word.char;
+    if(ok){setScore(s=>s+1);setStreak(s=>s+1);setProg(p=>({...p,[q.word.id]:Math.min(3,(p[q.word.id]||0)+1)}));}
+    else{setStreak(0);setProg(p=>({...p,[q.word.id]:Math.max(0,(p[q.word.id]||0)-1)}));}
+    speak(q.word.char);
+    setTimeout(()=>{setSel(null);setIdx(i=>i+1);},1300);
+  }
+
+  return(
+    <div>
+      <LessonPicker lesson={lesson} setLesson={setLesson}/>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+        <h2 style={{fontSize:"1.25rem",fontWeight:700}}>✅ 选择测验</h2>
+        <span style={{marginLeft:"auto",fontSize:".82rem",color:"#777"}}>题目 {idx+1}/10 · 得分 {score} · 🔥{streak}</span>
+      </div>
+      <Strip pct={Math.round(idx/10*100)}/>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:22,alignItems:"start"}}>
+        <div style={{background:"#fff",borderRadius:13,padding:26,textAlign:"center"}}>
+          <div style={{fontSize:".76rem",color:"#999",marginBottom:10}}>这个词语的英文意思是？</div>
+          <div style={{fontSize:"3.4rem",fontWeight:700}}>{q.word.char}</div>
+          <div style={{color:"#3d2fa0",fontSize:"1rem",marginTop:5}}>{q.word.pinyin}</div>
+          <SpeakBtn label="🔊 听发音" onClick={()=>speak(q.word.char)} style={{marginTop:12}}/>
+        </div>
+        <div>
+          {q.options.map(opt=>{
+            let bg="#fff",bc="#e0e0f0",col="#1a1a2e";
+            if(sel){if(opt.char===q.word.char){bg="#e8f5e9";bc="#4caf82";col="#2e7d52";}else if(opt.char===sel){bg="#fdecea";bc="#e25c5c";col="#c62828";}}
+            return(<button key={opt.char} onClick={()=>pick(opt)} disabled={!!sel}
+              style={{width:"100%",background:bg,border:`2px solid ${bc}`,borderRadius:10,padding:"12px 15px",textAlign:"left",fontSize:".93rem",cursor:"pointer",marginBottom:9,color:col,transition:".2s"}}>{opt.en}</button>);
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CollocMode({lesson,setLesson}){
+  const firstLesson=Number(Object.keys(VOCAB)[0]);
+  const [cur,setCur]=useState(lesson||firstLesson);
+  const [selId,setSelId]=useState(null);
+  const [speakIdx,setSIdx]=useState(null);
+  const words=VOCAB[cur]?.words||[];
+  const sel=words.find(w=>w.id===selId);
+
+  function tapColloc(c,i){setSIdx(i);speak(c);setTimeout(()=>setSIdx(null),1600);}
+
+  return(
+    <div>
+      <div style={{marginBottom:16}}>
+        <h2 style={{fontSize:"1.25rem",fontWeight:700}}>🔗 词语搭配</h2>
+        <p style={{color:"#666",fontSize:".85rem",marginTop:3}}>点击词语查看搭配，再点击每个搭配朗读。</p>
+        <div style={{background:"#fff3cd",border:"1px solid #ffe082",borderRadius:9,padding:"9px 13px",marginTop:10,fontSize:".82rem",color:"#5d4037"}}>
+          ⚠️ 词语搭配是考试重点！多点击朗读，多读几遍！
+        </div>
+      </div>
+      <div style={{display:"flex",gap:8,marginBottom:20,flexWrap:"wrap"}}>
+        {Object.entries(VOCAB).map(([k])=>(
+          <button key={k} onClick={()=>{setCur(Number(k));setSelId(null);}}
+            style={{background:cur===Number(k)?"#3d2fa0":"#fff",color:cur===Number(k)?"#fff":"#3d2fa0",border:"2px solid #3d2fa0",borderRadius:8,padding:"6px 14px",cursor:"pointer",fontWeight:cur===Number(k)?700:400,fontSize:".83rem"}}>
+            第{k}课
+          </button>
+        ))}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(130px,1fr))",gap:10,marginBottom:22}}>
+        {words.map(w=>(
+          <button key={w.id} onClick={()=>{setSelId(selId===w.id?null:w.id);speak(w.char);}}
+            style={{background:selId===w.id?"#3d2fa0":"#fff",color:selId===w.id?"#fff":"#1a1a2e",border:`2px solid ${selId===w.id?"#3d2fa0":"#e0e0f0"}`,borderRadius:11,padding:"13px 10px",cursor:"pointer",textAlign:"center",transition:".2s",position:"relative"}}>
+            {w.psle&&<span style={{position:"absolute",top:5,right:5,background:"#fff3cd",color:"#856404",fontSize:9,padding:"1px 4px",borderRadius:5,fontWeight:700}}>PSLE</span>}
+            <div style={{fontSize:"1.4rem",fontWeight:700}}>{w.char}</div>
+            <div style={{fontSize:".7rem",marginTop:3,opacity:selId===w.id?.85:.55}}>{w.pinyin}</div>
+          </button>
+        ))}
+      </div>
+      {sel?(
+        <div style={{background:"#fff",borderRadius:13,padding:26}}>
+          <div style={{display:"flex",alignItems:"center",gap:16,paddingBottom:16,borderBottom:"2px solid #eef0fb",marginBottom:18}}>
+            <div>
+              <div style={{fontSize:"2.6rem",fontWeight:700,color:"#3d2fa0"}}>{sel.char}</div>
+              <div style={{color:"#555",fontSize:".95rem",marginTop:2}}>{sel.pinyin}</div>
+              <div style={{color:"#888",fontSize:".85rem",marginTop:1}}>{sel.en}</div>
+            </div>
+            <div style={{marginLeft:"auto",display:"flex",flexDirection:"column",gap:8}}>
+              <SpeakBtn label="🔊 朗读词语" onClick={()=>speak(sel.char)} primary/>
+              <SpeakBtn label="🔊 听例句" onClick={()=>speak(sel.example)}/>
+            </div>
+          </div>
+          <div style={{background:"#f8f9ff",borderRadius:9,padding:"12px 15px",marginBottom:18}}>
+            <div style={{fontSize:".72rem",color:"#999",marginBottom:5}}>例句</div>
+            <div style={{fontSize:".95rem",lineHeight:1.8,color:"#333"}}>{sel.example}</div>
+          </div>
+          <div style={{fontWeight:700,fontSize:".95rem",marginBottom:12}}>
+            {"📌 词语搭配 "}<span style={{fontWeight:400,fontSize:".82rem",color:"#999"}}>— 点击每个搭配朗读</span>
+          </div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:10,marginBottom:16}}>
+            {sel.collocations.map((c,i)=>(
+              <button key={i} onClick={()=>tapColloc(c,i)} style={{
+                background:speakIdx===i?"#3d2fa0":"#eef0fb",color:speakIdx===i?"#fff":"#3d2fa0",
+                border:`2px solid ${speakIdx===i?"#3d2fa0":"#ccd"}`,borderRadius:10,
+                padding:"11px 18px",cursor:"pointer",fontSize:"1.05rem",fontWeight:700,
+                display:"flex",alignItems:"center",gap:7,transition:".2s"}}>
+                <span>{speakIdx===i?"🔊":"👆"}</span>{c}
+              </button>
+            ))}
+          </div>
+          <div style={{background:"#f0f4ff",borderRadius:9,padding:"11px 14px",fontSize:".82rem",color:"#555",lineHeight:1.9}}>
+            <strong style={{color:"#3d2fa0"}}>{"💡 记忆小贴士："}</strong><br/>
+            {sel.collocations.map((c,i)=>(
+              <span key={i}><strong style={{color:"#3d2fa0"}}>{c}</strong>
+              <span style={{color:"#888"}}>{c.includes(sel.char)?` — 含有「${sel.char}」`:`  — 和「${sel.char}」搭配`}</span>
+              {i<sel.collocations.length-1?"；":"。"}</span>
+            ))}
+          </div>
+        </div>
+      ):(
+        <div style={{background:"#fff",borderRadius:13,padding:32,textAlign:"center",color:"#bbb"}}>
+          <div style={{fontSize:"2rem",marginBottom:10}}>👆</div>
+          点击上方任何一个词语，查看它的词语搭配
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProgressMode({prog,setProg}){
+  const levels=[
+    {label:"未学",bg:"#e9ecef",col:"#666"},
+    {label:"学习中",bg:"#fff3cd",col:"#856404"},
+    {label:"复习",bg:"#d1ecf1",col:"#0c5460"},
+    {label:"掌握 ⭐",bg:"#d4edda",col:"#155724"},
+  ];
+  const counts=[0,1,2,3].map(s=>Object.values(prog).filter(v=>v===s).length);
+  return(
+    <div>
+      <h2 style={{fontSize:"1.25rem",fontWeight:700,marginBottom:18}}>📊 我的进度</h2>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:22}}>
+        {levels.map((l,i)=>(
+          <div key={i} style={{background:l.bg,borderRadius:11,padding:14,textAlign:"center"}}>
+            <div style={{fontSize:"1.7rem",fontWeight:700,color:l.col}}>{counts[i]}</div>
+            <div style={{fontSize:".75rem",color:l.col,marginTop:3}}>{l.label}</div>
+          </div>
+        ))}
+      </div>
+      {Object.entries(VOCAB).map(([k,v])=>(
+        <div key={k} style={{marginBottom:22}}>
+          <div style={{fontWeight:700,fontSize:"1rem",color:"#3d2fa0",marginBottom:10}}>第{k}课 · {v.title}</div>
+          <div style={{background:"#fff",borderRadius:13,padding:16}}>
+            {v.words.map(w=>{
+              const lvl=prog[w.id]||0;const lv=levels[lvl];
+              return(
+                <div key={w.id} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 0",borderBottom:"1px solid #f5f5f5"}}>
+                  <div style={{flex:1}}>
+                    <span style={{fontWeight:700,fontSize:16}}>{w.char}</span>
+                    {w.psle&&<PsleBadge/>}
+                    <div style={{color:"#999",fontSize:11,marginTop:1}}>{w.pinyin} · {w.en}</div>
+                  </div>
+                  <SpeakBtn onClick={()=>speak(w.char)}/>
+                  <div style={{background:lv.bg,color:lv.col,borderRadius:7,padding:"3px 9px",fontSize:".76rem",fontWeight:600,minWidth:50,textAlign:"center"}}>{lv.label}</div>
+                  <div style={{display:"flex",gap:3}}>
+                    {[0,1,2,3].map(s=>(
+                      <button key={s} onClick={()=>setProg(p=>({...p,[w.id]:s}))}
+                        style={{width:24,height:24,borderRadius:6,border:"none",cursor:"pointer",background:lvl>=s?levels[s].bg:"#f5f5f5",color:lvl>=s?levels[s].col:"#ccc",fontWeight:700,fontSize:12}}>
+                        {["○","△","□","★"][s]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
